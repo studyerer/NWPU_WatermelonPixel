@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+  <%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -90,6 +92,57 @@
               <p style="width: 90%;padding-left: 20%; padding-top: 5%;">在这里添加简介....</p>
             </figcaption>
           </figure></a></div>
+              <% 
+      	String  user="root";    
+          Connection  conn=null;
+          	String  password="123456";       //密码为自己数据库的密码   
+             Class.forName("com.mysql.cj.jdbc.Driver").newInstance(); //加载JDBC驱动程序   
+
+             String  url="jdbc:mysql:"+ "//127.0.0.1:3306/watermelon?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT"; //bin_db为你的数据库的名称   
+             //String url="jdbc:mysql://localhost:3306/bin_db?useUnicode=true&characterEncoding=utf-8";
+             //String  url="jdbc:mysql:"+ "//127.0.0.1:3306/bin_db+?user="+user+"&password="+password;
+           conn= DriverManager.getConnection(url,user,password);
+          Statement statement;
+          try {
+              statement = conn.createStatement();
+              //需要执行的数据库操作语句
+              String sql = "select * from activity_detail_blog";
+              //执行数据库操作语句并返回结果
+              ResultSet rs = statement.executeQuery(sql);
+           
+
+              String name = null;
+              String category = null;
+              String content=null;
+              String important_word=null;
+              String description=null;
+              String writer = null;
+              String Image=null;
+              while(rs.next())
+              {
+                  name = rs.getString("pagename");
+                  Image = rs.getString("photoname");
+                  content=rs.getString("page");
+                  important_word=rs.getString("important_word");
+                  description = rs.getString("description");
+                  writer = rs.getString("builder");%>
+                  <div class="card new_card" ><a href="about/about3.jsp">
+          <figure class="pp-effect"><img class="img-fluid" src='<%=Image %>'alt="Food"/>
+            <figcaption >
+              <div ><%=name %></div>
+              <p style="width: 90%;padding-left: 20%; padding-top: 5%;"><%=description+writer %></p>
+            </figcaption>
+          </figure></a></div>
+                 <% 
+              }
+              rs.close();
+          } catch (SQLException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+          }
+     
+ %>
+     
     </div>
   </div>
 </div>
